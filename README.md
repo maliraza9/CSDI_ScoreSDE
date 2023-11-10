@@ -8,7 +8,7 @@ CSDI framework implementation of the thesis Score Matching for Irregularly Sampl
 ![img_2.png](img_2.png)
 ![img_3.png](img_3.png)
 
-![img_3.png](img_3_rslt.png)
+![img_3_rslt.png](img_3_rslt.png)
 ![img_4.png](img_4.png)
 ![img_5.png](img_5.png)
 
