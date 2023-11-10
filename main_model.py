@@ -238,7 +238,6 @@ class CSDI_base(nn.Module):
 
 
 
-
     def calc_loss(
         self, observed_data, cond_mask, observed_mask, side_info, is_train, set_t=-1
     ):
