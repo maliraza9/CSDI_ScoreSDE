@@ -2,6 +2,13 @@
 This is the github repository for the Score Based Variance Preserving SDE and Variance Exploding SDE algorithms within the 
 CSDI framework implementation of the thesis Score Matching for Irregularly Sampled Time Series.
 
+
+![img.png](img.png)
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
+![img_3.png](img_3.png)
+
+
 ## Requirement
 
 Please install the packages in requirements.txt
@@ -38,16 +45,5 @@ python exe_pm25.py --nsample [number of samples]
 
 ## Acknowledgements
 
-A part of the codes is based on [BRITS](https://github.com/caow13/BRITS) and [DiffWave](https://github.com/lmnt-com/diffwave)
+This code builds on [CSDI](https://github.com/ermongroup/CSDI), [ScoreSDE](https://github.com/yang-song/score_sde) and [DiffWave](https://github.com/lmnt-com/diffwave)
 
-## Citation
-If you use this code for your research, please cite our paper:
-
-```
-@inproceedings{tashiro2021csdi,
-  title={CSDI: Conditional Score-based Diffusion Models for Probabilistic Time Series Imputation},
-  author={Tashiro, Yusuke and Song, Jiaming and Song, Yang and Ermon, Stefano},
-  booktitle={Advances in Neural Information Processing Systems},
-  year={2021}
-}
-```
