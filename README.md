@@ -1,5 +1,6 @@
-# CSDI
-This is the github repository for the NeurIPS 2021 paper "[CSDI: Conditional Score-based Diffusion Models for Probabilistic Time Series Imputation](https://arxiv.org/abs/2107.03502)".
+# Score-Based Stochastic Stochastic Differential Equations Implementation of Score Matching for Irregular Time Series
+This is the github repository for the Score SDE algorithms Variance Preserving SDE and Variance Exploding SDE within the 
+CSDI framework implementation of the thesis Score Matching for Irregularly Sampled Time Series.
 
 ## Requirement
 
