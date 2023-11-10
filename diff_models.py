@@ -77,54 +77,23 @@ class diff_CSDI(nn.Module):
         )
 
     def forward(self, x, cond_info, diffusion_step):
-
-        # print("DIFFCSDI x has input shape ", x.shape)
-
-
-
         B, inputdim, K, L = x.shape
-        #inputdim = 2:::: x.shape: (16,2,2,51)=(B,2,K,L)
-
         x = x.reshape(B, inputdim, K * L)
-        # print("DIFFCSDI  x after input projection", x.shape)
-
         x = self.input_projection(x)
-        # print("DIFFCSDI x after input projection", x.shape)
-
         x = F.relu(x)
         x = x.reshape(B, self.channels, K, L)
-        # print("DIFFCSDI x reshape after relu", x.shape)
-
-
         diffusion_emb = self.diffusion_embedding(diffusion_step)
 
         skip = []
         for layer in self.residual_layers:
             x, skip_connection = layer(x, cond_info, diffusion_emb)
             skip.append(skip_connection)
-
-        # print("DIFFCSDI x after Residual", x.shape)
-
-
         x = torch.sum(torch.stack(skip), dim=0) / math.sqrt(len(self.residual_layers))
-
-        # print("DIFFCSDI x after ALL NET Residual", x.shape)
-
         x = x.reshape(B, self.channels, K * L)
-        # print("DIFFCSDI x after prior to output reshape ", x.shape)
-
         x = self.output_projection1(x)  # (B,channel,K*L)
-        # print("DIFFCSDI x after output projection ", x.shape)
         x = F.relu(x)
-        # print("DIFFCSDI x after Filter output projection ", x.shape)
-
         x = self.output_projection2(x)  # (B,1,K*L)
         x = x.reshape(B, K, L)
-        # print("DIFFCSDI x as final ouutput of model ", x.shape)
-        # print("#######################################")
-        # print("#######################################")
-        # print("#######################################")
-
         return x
 
 
@@ -161,70 +130,33 @@ class ResidualBlock(nn.Module):
         return y
 
     def forward(self, x, cond_info, diffusion_emb):
-
-        # print("residual input x shape", x.shape)
         B, channel, K, L = x.shape
         base_shape = x.shape
         x = x.reshape(B, channel, K * L)
-
-        # print("diffusion input diffusion_emb shape", diffusion_emb.shape)
-
-
         # diffusion_emb = self.diffusion_projection(diffusion_emb).unsqueeze(-1)  # (B,channel,1)
-        # print("diffusion input diffusion_emb resized to shape ", diffusion_emb.shape)
-
         # diffusion_emb = diffusion_emb.expand(-1, -1, 102)  # Expand along the third dimension
-        y = x #+ diffusion_emb
-
-
-        # print("adjusting y input shape from ", y.shape)
+        # y = x #+ diffusion_emb
+        y = x  # + diffusion_emb
 
         y = self.forward_time(y, base_shape)
-
-        # print(" y after  time transformer layer  ", y.shape)
-
         y = self.forward_feature(y, base_shape)  # (B,channel,K*L)
-        # print(" y after  feature  transformer layer  ", y.shape)
 
         y = self.mid_projection(y)  # (B,2*channel,K*L)
-        # print(" y after adjusting feature>time transformer layer output  ", y.shape)
-
-
-
         _, cond_dim, _, _ = cond_info.shape  #  (B, cond_dim, K, L) (16, 145, 2, 51)  ; 145 = feature emb+ time emb +1 = 16+128+1
         cond_info = cond_info.reshape(B, cond_dim, K * L)
 
         cond_info = self.cond_projection(cond_info)  # (B,2*channel,K*L)
 
-        # print(" Y shape before cond_info add  ", y.shape)
-        # print(" cond_info shape add  ", cond_info.shape)
-
         y = y + cond_info
-
-        # print(" Y shape after add  ", y.shape)
-
 
         gate, filter = torch.chunk(y, 2, dim=1)
         y = torch.sigmoid(gate) * torch.tanh(filter)  # (B,channel,K*L)
-        # print(" y after filtering shape ", y.shape)
 
         y = self.output_projection(y)
-        # print(" y final output projection ", y.shape)
-
 
         residual, skip = torch.chunk(y, 2, dim=1)
-
-        # print(" y shape after residual  projection ", residual.shape)
-        #
-
-
         x = x.reshape(base_shape)
-        # print(" x shape as base shape ", x.shape)
 
         residual = residual.reshape(base_shape)
-        # print(" residual as   base shape ", residual.shape)
-        # print("........................")
-
         skip = skip.reshape(base_shape)
-
         return (x + residual) / math.sqrt(2.0), skip
