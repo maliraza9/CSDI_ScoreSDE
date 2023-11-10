@@ -1,5 +1,5 @@
 # Score-Based Stochastic Differential Equations Algorithms for Irregular Time Series
-This is the github repository for the Score SDE algorithms Variance Preserving SDE and Variance Exploding SDE within the 
+This is the github repository for the Score Based Variance Preserving SDE and Variance Exploding SDE algorithms within the 
 CSDI framework implementation of the thesis Score Matching for Irregularly Sampled Time Series.
 
 ## Requirement
