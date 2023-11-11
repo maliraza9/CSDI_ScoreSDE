@@ -100,7 +100,6 @@ class SDE(abc.ABC):
         drift, diffusion = sde_fn(diff_input, x, side_info, t)
 
         drift = drift - diffusion[:, None, None] ** 2 * score * (0.5 if self.probability_flow else 1.)
-        # drift = drift - diffusion[:, None, None, None] ** 2 * score * (0.5 if self.probability_flow else 1.)
         # Set the diffusion function to zero for ODEs.
         diffusion = 0. if self.probability_flow else diffusion
         return drift, diffusion
@@ -142,38 +141,21 @@ class VPSDE(SDE):
   def sde(self, diff_input, x, side_info, t):
     beta_t = self.beta_0 + t * (self.beta_1 - self.beta_0)
 
-    bb = self.beta_0
-    bbb = self.beta_1
-    # beta_t = beta_t.view(-1, 1, 1)  # Shape: (16, 1, 1)
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     beta_t = beta_t.to(device)
-    # drift = -0.5 * beta_t[:, None, None, None] * x #equation 25 first term
     drift = -0.5 * beta_t[:, None, None] * x #equation 25 first term
-    # drift = -0.5 * beta_t * x #equation 25 first term
     diffusion = torch.sqrt(beta_t) #eq. 25 second term
 
     return drift, diffusion
 
   def marginal_prob(self, x, t):
-    # x = x["observed_data"] ### ADDED
     log_mean_coeff = -0.25 * t ** 2 * (self.beta_1 - self.beta_0) - 0.5 * t * self.beta_0
-
-    # log_mean_coeff = torch.tensor(log_mean_coeff, dtype=torch.float32)
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     log_mean_coeff = log_mean_coeff.to(device)
     x = x.to(device)
 
-    # log_mean_coeff = log_mean_coeff.view(-1, 1, 1)  # Shape: (16, 1, 1)
-    # mean = torch.exp(log_mean_coeff * x)
-
-
-    # mean = torch.exp(log_mean_coeff[:, None, None]) * x
     mean = torch.exp(log_mean_coeff[:, None, None]) * x
-
-
-    # mean = torch.exp(log_mean_coeff[:, None, None]) * x
-
     std = torch.sqrt(1. - torch.exp(2. * log_mean_coeff))
     return mean, std
 
