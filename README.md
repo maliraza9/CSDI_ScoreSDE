@@ -1,17 +1,21 @@
 # Score-Based Stochastic Differential Equations Algorithms for Irregular Time Series
 This is the github repository for the Score Based Variance Preserving SDE and Variance Exploding SDE algorithms within the 
-CSDI framework implementation of the thesis Score Matching for Irregularly Sampled Time Series.
+CSDI framework implementation of the thesis "Score Matching Generative Models for Irregularly Sampled Time Series".
+
+<img src="Images/vpsde_training_algo.png" width="350" height="170">
+
+<img src="Images/vesde_training_algo.png" width="350" height="170">
+
+<img src="Images/vpsde_imputation_algo.png" width="350" height="170">
+
+<img src="Images/vesde_imputation_algo.png" width="350" height="170">
 
 
-![img.png](img.png)
-![img_1.png](img_1.png)
-![img_2.png](img_2.png)
-![img_3.png](img_3.png)
+<img src="Images/crps_comparison.png" width="350" height="170">
 
-![img_3_rslt.png](img_3_rslt.png)
-![img_4.png](img_4.png)
-![img_5.png](img_5.png)
+<img src="Images/rmse_comparison.png" width="350" height="170">
 
+<img src="Images/mae_comparison.png" width="350" height="170">
 
 ## Requirement
 
